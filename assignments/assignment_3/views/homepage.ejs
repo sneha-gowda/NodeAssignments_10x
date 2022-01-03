@@ -14,12 +14,18 @@
             <button type="button" onclick="location.href='/form' ">Add User</button>
         </div>
         <div class="UsersContainer">
-            <% data.forEach((user)=>{%>
+            <%if(data.length > 0){ data.forEach((user)=>{%>
                 <div class="card">
                     <h2>🙂<%= user.name %></h2>
                     <h3>📫<%= user.email %></h3>
+                    <form method="POST" action="/users/<%= user._id %>?_method=PUT">
+                        <button id="edit-<%= user.name %>" type="submit">Select</button>
+                    </form>
+                    <form method="POST" action="/users/<%= user._id %>?_method=DELETE">
+                        <button id="delete-<%= user.name %>">Delete</button>
+                    </form>
                 </div>
-            <%});%>
+            <%});}%>
         </div>
     </section>
 </body>
