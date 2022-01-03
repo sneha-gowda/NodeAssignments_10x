@@ -8,6 +8,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-top: 5%;
 }
 .Header {
   text-align: center;
@@ -70,4 +71,22 @@ input[type='submit'] {
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.5em;
+}
+
+.card.false {
+  background-color: rgb(249, 109, 122);
+}
+.card.Null {
+  background-color: rgb(251, 251, 85);
+}
+.card.true {
+  background-color: rgb(141, 235, 141);
+}
+.card button {
+  width: 8em;
+  font-size: inherit;
+}
+span {
+  font-family: -apple-system;
+  color: rgb(98, 95, 95);
 }
