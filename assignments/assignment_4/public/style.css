@@ -90,3 +90,9 @@ span {
   font-family: -apple-system;
   color: rgb(98, 95, 95);
 }
+.RadioClass {
+  font-size: 0.6em;
+  width: 30%;
+  text-align: start;
+  margin: auto;
+}

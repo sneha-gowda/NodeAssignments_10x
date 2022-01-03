@@ -36,7 +36,7 @@ const userSchema=new mongoose.Schema({
         unique: true,
     },
     isPromoted:{
-        type:String,
+        type:"string",
         default:"Null"
     }
 })
@@ -80,12 +80,12 @@ const insertDocToUser = async (doc) => {
     };
 }
 // Handing Post request from Form
-app.post('/user/add',(req,res)=>{
+app.post('/users/add',(req,res)=>{
     // console.log(req.body)
     const obj={
         name: req.body.name,
-        email: req.body.email
-
+        email: req.body.email,
+        isPromoted:req.body.isPromoted
     }
     insertDocToUser(obj)
     getDocsOfUser().then((data) => {
