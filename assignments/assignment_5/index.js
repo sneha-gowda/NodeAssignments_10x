@@ -159,11 +159,30 @@ app.put("/posts/:postId", authenticateToken,async (req,res)=>{
         else{
             res.status(403).send("You can not edit this post")
         }
-
     }).catch(err=>{
         res.status(500).send("Post not found")
     })
 
 })
 
+// --------------------------DELETE OPERATION(DELETE)------------------------
 
+app.delete("/posts/:postId", authenticateToken, async (req, res) => {
+
+    const userId = req.user.userID;
+    Post.findOne({ _id: req.params.postId }).then(result => {
+        if (result.user == userId) {
+            Post.findOneAndDelete({ _id: req.params.postId }).then(result => {
+                res.status(202).send(result)
+            }).catch(err => {
+                res.status(500).send("Server Error")
+            })
+        }
+        else {
+            res.status(403).send("You can not delete this post")
+        }
+    }).catch(err => {
+        res.status(500).send("Post not found")
+    })
+
+})
