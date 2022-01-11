@@ -7,33 +7,30 @@ require("./models.js")
 const jwt=require("jsonwebtoken")
 const port=process.env.PORT || 3000;
 app.use(express.json())
-
+app.use(express.urlencoded({ extended: true })); 
 const bcrypt=require("bcrypt")
 
 const Access_Token_Secret = '165a6629b602ad71a1ddac31b9dd60baf241f357778ad1748a2182db875cc80fb81401d64d1b2e4df85a550efb34673102a48ce0ddb7c849a4245b0809eed07d'
-const Refresh_Token_Secret = 'd65cf4fa9e43a0408ef45dde5de5271af986ee4e832b93677bbd43d368a5c61fb334c4d38234edd39f85abdcb4cab0a4b63b7d73a4e9ff390394e5414977e6e8'
+// const Refresh_Token_Secret = 'd65cf4fa9e43a0408ef45dde5de5271af986ee4e832b93677bbd43d368a5c61fb334c4d38234edd39f85abdcb4cab0a4b63b7d73a4e9ff390394e5414977e6e8'
 
 const models=require("./models.js")
 user=models.user;
 Post=models.post;
 
-
-
-app.get("/",(req,res)=>{
-    res.send("Hello world")
-})
 app.listen(port,()=>{
     console.log(`i'm listening at ${port}`)
+})
+app.get("/", (req, res) => {
+    res.send("Hello world")
 })
 // =---------------------------REGISTER----------------------------
 app.post("/register",async (req, res)=>{ 
     try{
-        console.log(req.body.password)
+        // console.log(req.body,"blablabla")
         const hashPassword=await bcrypt.hash(req.body.password,10) 
-        console.log(hashPassword)
         doc1=new user({name:req.body.name, email:req.body.email,password:hashPassword})
         doc1.save().then(result=>{
-            res.status(201).send("created")
+            res.status(200).send("created")
         }).catch(error=>{
 
             res.status(400).send("This email is already in use")    
@@ -46,7 +43,7 @@ app.post("/register",async (req, res)=>{
 //--------------------------------LOGIN--------------------------------
 app.post('/login', async (req, res)=>{
     try{
-        console.log(req.headers)
+        // console.log(req.headers)
         reqPassword=req.body.password;
         user.findOne({email:req.body.email}).then(result=>{
             const hashPassword= result.password;
@@ -54,7 +51,7 @@ app.post('/login', async (req, res)=>{
                 if(outputofCompare){
                     const user = { userID: result._id }
                     const token = jwt.sign(user, Access_Token_Secret)
-                    res.status(202).json({
+                    res.status(200).json({
                         token: token,
                         message:"Succesful"
                 })}
@@ -115,9 +112,10 @@ app.post("/posts", authenticateToken,async (req,res)=>{
         user: req.user.userID
         });
         resultOfAddingPost.save().then(result=>{
-            res.status(201).send(result)
+            // console.log(result);
+            res.status(200).send(result)
         }).catch(err=>{
-            console.log(err);
+            // console.log(err);
             res.status(500).send("Server error")
         })
     
@@ -134,7 +132,6 @@ app.post("/posts", authenticateToken,async (req,res)=>{
 
 app.get('/posts', authenticateToken ,async (req,res)=>{
     Post.find().then(result=>{
-        console.log(result);
         res.status(200).json({
             posts:result
         })
@@ -147,13 +144,14 @@ app.get('/posts', authenticateToken ,async (req,res)=>{
 // --------------------------PUT OPERATION (UPDATE)--------------------------------
 
 app.put("/posts/:postId", authenticateToken,async (req,res)=>{
+    console.log(req.params)
     const userId=req.user.userID;
     Post.findOne({_id:req.params.postId}).then(result=>{
         if(result.user==userId){
             Post.findOneAndUpdate({_id:req.params.postId},req.body).then(result=>{
-                res.status(202).send(result)
+                res.status(200).send(result)
             }).catch(err=>{
-                res.status(500).send("Server Error")
+                res.status(510).send("Server Error")
             })
         }
         else{
@@ -173,9 +171,9 @@ app.delete("/posts/:postId", authenticateToken, async (req, res) => {
     Post.findOne({ _id: req.params.postId }).then(result => {
         if (result.user == userId) {
             Post.findOneAndDelete({ _id: req.params.postId }).then(result => {
-                res.status(202).send(result)
+                res.status(200).send(result)
             }).catch(err => {
-                res.status(500).send("Server Error")
+                res.status(501).send("Server Error")
             })
         }
         else {
